@@ -1,8 +1,11 @@
 "use client";
+import { UserDetailContext } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Provider({ children }) {
+  const [user, setUser] = useState();
+
   useEffect(() => {
     CreateNewUser();
   }, []);
@@ -29,13 +32,25 @@ function Provider({ children }) {
             },
           ])
           .select();
+        setUser(data[0]);
 
         console.log("New User Added to DB: ", data);
       }
+
+      setUser(Users[0]);
     });
   };
 
-  return <div>{children}</div>;
+  return (
+    <UserDetailContext.Provider value={{ user, setUser }}>
+      <div>{children}</div>
+    </UserDetailContext.Provider>
+  );
 }
 
 export default Provider;
+
+export const useUser = () => {
+  const context = useContext(UserDetailContext);
+  return context;
+};

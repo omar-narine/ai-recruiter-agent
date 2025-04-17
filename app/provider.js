@@ -1,7 +1,7 @@
 "use client";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 function Provider({ children }) {
   const [user, setUser] = useState();
@@ -42,9 +42,11 @@ function Provider({ children }) {
   };
 
   return (
-    <UserDetailContext.Provider value={{ user, setUser }}>
-      <div>{children}</div>
-    </UserDetailContext.Provider>
+    <div className="bg-gray-100">
+      <UserDetailContext.Provider value={{ user, setUser }}>
+        <div>{children}</div>
+      </UserDetailContext.Provider>
+    </div>
   );
 }
 

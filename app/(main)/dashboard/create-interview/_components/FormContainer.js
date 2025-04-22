@@ -8,12 +8,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { InterviewType } from "@/services/Constants";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-function FormContainer() {
+function FormContainer({ onHandleInputChange }) {
+  const [interviewType, setInterviewType] = useState([]);
+
+  useEffect(() => {
+    if (interviewType) {
+      onHandleInputChange("type", interviewType);
+    }
+  }, [interviewType]);
+
   return (
     <div className="bg-white p-5 rounded-xl">
       <div>
@@ -21,15 +29,26 @@ function FormContainer() {
         <Input
           placeholder="e.g. Full-Stack Software Engineer"
           className="mt-2"
+          onChange={(event) =>
+            onHandleInputChange("jobPosition", event.target.value)
+          }
         />
       </div>
       <div>
         <h2 className="text-sm mt-5 font-medium">Job Description</h2>
-        <Textarea placeholder="Enter Job Description" className="mt-2 h-48" />
+        <Textarea
+          placeholder="Enter Job Description"
+          className="mt-2 h-48"
+          onChange={(event) =>
+            onHandleInputChange("jobDescription", event.target.value)
+          }
+        />
       </div>
       <div>
         <h2 className="text-sm mt-5 font-medium">Interview Duration</h2>
-        <Select>
+        <Select
+          onValueChange={(value) => onHandleInputChange("duration", value)}
+        >
           <SelectTrigger className="w-full mt-2">
             <SelectValue placeholder="Select Duration" />
           </SelectTrigger>
@@ -49,6 +68,7 @@ function FormContainer() {
             <div
               key={index}
               className="flex gap-2 p-1 px-2 bg-white border border-gray-300 rounded-2xl items-center cursor-pointer hover:bg-secondary"
+              onClick={() => setInterviewType((prev) => [...prev, type.title])}
             >
               <type.icon className="h-4 w-4" />
               <h2>{type.title}</h2>

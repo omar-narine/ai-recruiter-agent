@@ -14,6 +14,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function FormContainer({ onHandleInputChange }) {
+  // Ensure proper handling of event type being clicked
   const [interviewType, setInterviewType] = useState([]);
 
   useEffect(() => {
@@ -21,6 +22,15 @@ function FormContainer({ onHandleInputChange }) {
       onHandleInputChange("type", interviewType);
     }
   }, [interviewType]);
+
+  const AddInterviewType = (type) => {
+    if (!interviewType.includes(type)) {
+      setInterviewType((prev) => [...prev, type]);
+    } else {
+      const result = interviewType.filter((item) => item != type);
+      setInterviewType(result);
+    }
+  };
 
   return (
     <div className="bg-white p-5 rounded-xl">
@@ -67,8 +77,12 @@ function FormContainer({ onHandleInputChange }) {
           {InterviewType.map((type, index) => (
             <div
               key={index}
-              className="flex gap-2 p-1 px-2 bg-white border border-gray-300 rounded-2xl items-center cursor-pointer hover:bg-secondary"
-              onClick={() => setInterviewType((prev) => [...prev, type.title])}
+              className={`flex gap-2 p-1 px-2 border border-gray-300 rounded-2xl items-center cursor-pointer hover:bg-secondary ${
+                interviewType.includes(type.title)
+                  ? "bg-blue-50 text-primary"
+                  : "bg-white"
+              }`}
+              onClick={() => AddInterviewType(type.title)}
             >
               <type.icon className="h-4 w-4" />
               <h2>{type.title}</h2>

@@ -46,7 +46,7 @@ function CreateInterview() {
           GoToNext={() => onGoToNext()}
         />
       ) : step == 2 ? (
-        <QuestionList />
+        <QuestionList formData={formData} />
       ) : null}
     </div>
   );

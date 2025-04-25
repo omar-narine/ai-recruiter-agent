@@ -17,10 +17,9 @@ export async function POST(req) {
     });
 
     const completion = await openai.chat.completions.create({
-      model: "google/gemini-2.5-pro-exp-03-25:free",
+      model: "openai/gpt-4o-mini",
       messages: [{ role: "user", content: FINAL_PROMPT }],
     });
-    console.log(completion.choices[0].message);
     return NextResponse.json(completion.choices[0].message);
   } catch (e) {
     console.log(e);

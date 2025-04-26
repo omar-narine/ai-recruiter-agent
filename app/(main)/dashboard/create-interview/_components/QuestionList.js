@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { Loader2Icon } from "lucide-react";
+import { Loader2, Loader2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import QuestionListContainer from "./QuestionListConainter";
@@ -86,7 +86,9 @@ function QuestionList({ formData }) {
           ></QuestionListContainer>
         )}
         <div className="flex justify-end mt-5">
-          <Button onClick={() => onFinish()}>Finish</Button>
+          <Button onClick={() => onFinish()} disabled={setLoading}>
+            {saveLoading && <Loader2 className="animate-spin" />}Finish
+          </Button>
         </div>
       </div>
     </div>

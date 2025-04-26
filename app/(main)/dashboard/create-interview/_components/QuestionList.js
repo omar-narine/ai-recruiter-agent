@@ -12,6 +12,7 @@ function QuestionList({ formData }) {
   const [loading, setLoading] = useState(false);
   const [questionList, setQuestionList] = useState();
   const { user } = useUser();
+  const [saveLoading, setSaveLoading] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -38,6 +39,7 @@ function QuestionList({ formData }) {
   };
 
   const onFinish = async () => {
+    setSaveLoading(true);
     const interview_id = uuidv4();
 
     try {
@@ -54,7 +56,9 @@ function QuestionList({ formData }) {
         .select();
 
       console.log(data);
+      setSaveLoading(false);
     } catch (e) {
+      setSaveLoading(false);
       console.log(e);
       toast("There was an error saving your questions!");
     }
@@ -74,12 +78,17 @@ function QuestionList({ formData }) {
           </div>
         </div>
       )}
-      {questionList?.length > 0 && (
-        <QuestionListContainer
-          questionList={questionList}
-          onFinish={onFinish}
-        ></QuestionListContainer>
-      )}
+      <div>
+        {questionList?.length > 0 && (
+          <QuestionListContainer
+            questionList={questionList}
+            onFinish={onFinish}
+          ></QuestionListContainer>
+        )}
+        <div className="flex justify-end mt-5">
+          <Button onClick={() => onFinish()}>Finish</Button>
+        </div>
+      </div>
     </div>
   );
 }

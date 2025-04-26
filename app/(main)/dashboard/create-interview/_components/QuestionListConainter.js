@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-function QuestionListContainer({ questionList, onFinish }) {
+function QuestionListContainer({ questionList }) {
   return (
     <div>
       <h2 className="font-bold text-lg">Generated Interview Questions:</h2>
@@ -15,9 +15,6 @@ function QuestionListContainer({ questionList, onFinish }) {
             <h2 className="text-sm text-gray-600">Type: {item?.type}</h2>
           </div>
         ))}
-      </div>
-      <div className="flex justify-end mt-5">
-        <Button onClick={() => onFinish()}>Finish</Button>
       </div>
     </div>
   );

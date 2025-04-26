@@ -3,6 +3,7 @@ import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import QuestionListConainter from "./QuestionListConainter";
 
 function QuestionList({ formData }) {
   const [loading, setLoading] = useState(false);
@@ -49,23 +50,9 @@ function QuestionList({ formData }) {
         </div>
       )}
       {questionList?.length > 0 && (
-        <div>
-          <h2 className="font-bold text-lg">Generated Interview Questions:</h2>
-          <div className="p-5 border border-gray-300 rounded-xl mt-5">
-            {questionList.map((item, index) => (
-              <div
-                key={index}
-                className="p-3 border flex flex-col gap-3 border-gray-200 rounded-xl mb-3"
-              >
-                <h2 className="font-bold">{item.question}</h2>
-                <h2 className="text-sm text-gray-600">Type: {item?.type}</h2>
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-end mt-5">
-            <Button onClick={() => onFinish()}>Finish</Button>
-          </div>
-        </div>
+        <QuestionListConainter
+          questionList={questionList}
+        ></QuestionListConainter>
       )}
     </div>
   );

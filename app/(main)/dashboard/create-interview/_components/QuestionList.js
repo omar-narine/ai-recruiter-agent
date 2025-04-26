@@ -3,11 +3,15 @@ import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import QuestionListConainter from "./QuestionListConainter";
+import QuestionListContainer from "./QuestionListConainter";
+import { supabase } from "@/services/supabaseClient";
+import { useUser } from "@/app/provider";
+import { v4 as uuidv4 } from "uuid";
 
 function QuestionList({ formData }) {
   const [loading, setLoading] = useState(false);
   const [questionList, setQuestionList] = useState();
+  const { user } = useUser();
 
   useEffect(() => {
     if (formData) {
@@ -33,7 +37,28 @@ function QuestionList({ formData }) {
     }
   };
 
-  const onFinish = () => {};
+  const onFinish = async () => {
+    const interview_id = uuidv4();
+
+    try {
+      const { data, error } = await supabase
+        .from("Interview")
+        .insert([
+          {
+            ...formData,
+            questionList: questionList,
+            userEmail: user?.email,
+            interview_id: interview_id,
+          },
+        ])
+        .select();
+
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+      toast("There was an error saving your questions!");
+    }
+  };
 
   return (
     <div>
@@ -50,9 +75,10 @@ function QuestionList({ formData }) {
         </div>
       )}
       {questionList?.length > 0 && (
-        <QuestionListConainter
+        <QuestionListContainer
           questionList={questionList}
-        ></QuestionListConainter>
+          onFinish={onFinish}
+        ></QuestionListContainer>
       )}
     </div>
   );

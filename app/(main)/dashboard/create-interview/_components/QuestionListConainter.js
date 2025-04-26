@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-function QuestionListConainter({ questionList }) {
+function QuestionListContainer({ questionList, onFinish }) {
   return (
     <div>
       <h2 className="font-bold text-lg">Generated Interview Questions:</h2>
@@ -23,4 +23,4 @@ function QuestionListConainter({ questionList }) {
   );
 }
 
-export default QuestionListConainter;
+export default QuestionListContainer;

@@ -3,7 +3,7 @@ import React from "react";
 
 function InterviewHeader() {
   return (
-    <div className="p-4 shadow-sm">
+    <div className="flex p-4 shadow-sm justify-center">
       <Image
         src={"/logo.png"}
         alt="logo"

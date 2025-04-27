@@ -14,6 +14,7 @@ function Interview() {
   console.log(interview_id);
   const [interviewData, setInterviewData] = useState();
   const [userName, setUserName] = useState();
+  const [userEmail, setUserEmail] = useState();
   const [loading, setLoading] = useState(false);
   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
   const router = useRouter();
@@ -62,7 +63,7 @@ function Interview() {
   };
 
   return (
-    <div className="spx-10 md:px-28 lg:px-48 xl:px-64 mt-16">
+    <div className="px-10 md:px-28 lg:px-48 xl:px-64 mt-16">
       <div className="flex flex-col items-center justify-center border rounded-lg bg-white p-7 sm:px-24 lg:px-32 xl:px-52 mb-20">
         <Image
           src={"/logo.png"}
@@ -88,6 +89,13 @@ function Interview() {
           <h2>Enter your full name</h2>
           <Input
             placeholder="e.g. John Doe"
+            onChange={(event) => setUserName(event.target.value)}
+          ></Input>
+        </div>
+        <div className="w-full mt-3">
+          <h2>Enter your email</h2>
+          <Input
+            placeholder="e.g. jdoe@gmail.com"
             onChange={(event) => setUserName(event.target.value)}
           ></Input>
         </div>

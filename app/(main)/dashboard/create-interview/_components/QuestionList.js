@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { Loader2, Loader2Icon } from "lucide-react";
+import { ArrowRight, Loader2, Loader2Icon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import QuestionListContainer from "./QuestionListConainter";
@@ -8,7 +8,7 @@ import { supabase } from "@/services/supabaseClient";
 import { useUser } from "@/app/provider";
 import { v4 as uuidv4 } from "uuid";
 
-function QuestionList({ formData }) {
+function QuestionList({ formData, onCreateLink }) {
   const [loading, setLoading] = useState(false);
   const [questionList, setQuestionList] = useState();
   const { user } = useUser();
@@ -57,6 +57,7 @@ function QuestionList({ formData }) {
 
       console.log(data);
       setSaveLoading(false);
+      onCreateLink(interview_id);
     } catch (e) {
       setSaveLoading(false);
       console.log(e);
@@ -86,8 +87,10 @@ function QuestionList({ formData }) {
           ></QuestionListContainer>
         )}
         <div className="flex justify-end mt-5">
-          <Button onClick={() => onFinish()} disabled={setLoading}>
-            {saveLoading && <Loader2 className="animate-spin" />}Finish
+          <Button onClick={() => onFinish()}>
+            {saveLoading && <Loader2 className="animate-spin" />}Create
+            Interview Link & Finish
+            <ArrowRight />
           </Button>
         </div>
       </div>

@@ -56,6 +56,7 @@ function Interview() {
     console.log(Interview[0]);
     setInterviewInfo({
       userName: userName,
+      userEmail: userEmail,
       interviewData: Interview[0],
     });
     router.push("/interview/" + interview_id + "/start");
@@ -96,7 +97,7 @@ function Interview() {
           <h2>Enter your email</h2>
           <Input
             placeholder="e.g. jdoe@gmail.com"
-            onChange={(event) => setUserName(event.target.value)}
+            onChange={(event) => setUserEmail(event.target.value)}
           ></Input>
         </div>
         <div className="p-3 bg-blue-50 flex gap-4 rounded-lg mt-5">
@@ -118,7 +119,7 @@ function Interview() {
         </div>
         <Button
           className="mt-5 w-full font-bold"
-          disabled={loading || !userName}
+          disabled={loading || !userName || !userEmail}
           onClick={() => onJoinInterview()}
         >
           <Video />

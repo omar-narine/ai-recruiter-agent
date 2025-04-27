@@ -2,17 +2,21 @@
 import { InterviewDataContext } from "@/context/InterviewDatatContext";
 import { Mic, Phone, Timer } from "lucide-react";
 import Image from "next/image";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Vapi from "@vapi-ai/web";
 import AlertConfirmation from "./_components/AlertConfirmation";
 import { toast } from "sonner";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import axios from "axios";
+import { supabase } from "@/services/supabaseClient";
 
 function StartInterview() {
+  const { interview_id } = useParams();
   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
   const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY);
   const [activeUser, setActiveUSer] = useState(false);
+  const [conversation, setConversation] = useState();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -106,8 +110,39 @@ Key Guidelines:
 
   vapi.on("call-end", () => {
     console.log("Call has ended.");
+    GeneratedFeedback();
     toast("Your interview has ended!");
   });
+
+  vapi.on("message", (message) => {
+    console.log(message?.conversation);
+    setConversation(message?.conversation);
+  });
+
+  const GeneratedFeedback = async () => {
+    const result = await axios.post("/api/ai-feedback", {
+      conversation: conversation,
+    });
+    console.log(result?.data);
+    const Content = result.data.content;
+    const FINAL_CONTENT = Content.replace("```json", "").replace("```", "");
+    console.log(FINAL_CONTENT);
+
+    // Save to DB
+
+    const { data, error } = await supabase
+      .from("Interview-Feedback")
+      .insert([
+        {
+          userName: interviewInfo?.userName,
+          userEmail: interviewInfo?.userEmail,
+          interview_id: interview_id,
+          feedback: JSON.parse(FINAL_CONTENT),
+          recommended: false, // TO BE UPDATED
+        },
+      ])
+      .select();
+  };
 
   return (
     <div className="p-20 lg:px-48 xl:56">

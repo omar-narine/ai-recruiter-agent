@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/services/supabaseClient";
 import { useUser } from "@/app/provider";
-import InterviewCard from "./InterviewCard";
+import InterviewCard from "../dashboard/_components/InterviewCard";
 
-function LatestInterviewsList() {
+function AllInterview() {
   const [interviewList, setInterviewList] = useState([]);
   const { user } = useUser();
 
@@ -19,15 +19,14 @@ function LatestInterviewsList() {
       .from("Interview")
       .select("*")
       .eq("userEmail", user?.email)
-      .order("id", { ascending: false })
-      .limit(6);
+      .order("id", { ascending: false });
     console.log(Interview);
     setInterviewList(Interview);
   };
 
   return (
     <div className="my-5">
-      <h2 className="font-bold text-2xl">Recently Created Interviews</h2>
+      <h2 className="font-bold text-2xl">All Previously Created Interviews</h2>
 
       {/* No Scheduled Interviews Message */}
       {interviewList?.length == 0 && (
@@ -53,4 +52,4 @@ function LatestInterviewsList() {
   );
 }
 
-export default LatestInterviewsList;
+export default AllInterview;

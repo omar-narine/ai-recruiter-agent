@@ -1,6 +1,6 @@
 "use client";
 import { InterviewDataContext } from "@/context/InterviewDatatContext";
-import { Mic, Phone, Timer } from "lucide-react";
+import { Loader2Icon, Mic, Phone, Timer } from "lucide-react";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 import Vapi from "@vapi-ai/web";
@@ -16,14 +16,15 @@ function StartInterview() {
   const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY);
   const [activeUser, setActiveUSer] = useState(false);
   const [conversation, setConversation] = useState();
-
+  const [loading, setLoading] = useState(false);
+  const [callEnd, setCallEnd] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (interviewInfo) {
-      startCall();
-    }
-  }, [interviewInfo]);
+  //   useEffect(() => {
+  //     if (interviewInfo) {
+  //       startCall();
+  //     }
+  //   }, [interviewInfo]);
 
   const startCall = () => {
     let questionList = "";
@@ -91,35 +92,62 @@ Key Guidelines:
 
   const stopInterview = () => {
     vapi.stop();
+    setCallEnd(true);
     toast("Call Disconnected");
+    GeneratedFeedback();
   };
 
-  vapi.on("call-start", () => {
-    console.log("Call has started.");
-    toast("Call Connected!");
-  });
-  vapi.on("speech-start", () => {
-    console.log("Assistant speech has started.");
-    setActiveUSer(false);
-  });
+  //   vapi.on("message", (message) => {
+  //     console.log(message?.conversation);
+  //     setConversation(message?.conversation);
+  //   });
 
-  vapi.on("speech-end", () => {
-    console.log("Assistant speech has ended.");
-    setActiveUSer(true);
-  });
+  useEffect(() => {
+    if (interviewInfo) {
+      startCall();
+    }
 
-  vapi.on("call-end", () => {
-    console.log("Call has ended.");
-    GeneratedFeedback();
-    toast("Your interview has ended!");
-  });
+    const handleMessage = (message) => {
+      console.log("Message: ", message);
+      if (message?.conversation) {
+        const convoString = JSON.stringify(message.conversation);
+        console.log("Conversation String: ", convoString);
+        setConversation(convoString);
+      }
+    };
 
-  vapi.on("message", (message) => {
-    console.log(message?.conversation);
-    setConversation(message?.conversation);
-  });
+    vapi.on("message", handleMessage);
+
+    vapi.on("call-start", () => {
+      console.log("Call has started.");
+      toast("Call Connected!");
+    });
+    vapi.on("speech-start", () => {
+      console.log("Assistant speech has started.");
+      setActiveUSer(false);
+    });
+    vapi.on("speech-end", () => {
+      console.log("Assistant speech has ended.");
+      setActiveUSer(true);
+    });
+    vapi.on("call-end", () => {
+      console.log("Call has ended.");
+      toast("Your interview has ended!");
+    });
+
+    // Clean up the VAPI Listener
+    return () => {
+      vapi.off("message", handleMessage);
+      vapi.off("call-start", () => console.log("ENDING VAPI SERVICE"));
+      vapi.off("speech-start", () => console.log("ENDING VAPI SERVICE"));
+      vapi.off("speech-end", () => console.log("ENDING VAPI SERVICE"));
+      vapi.off("call-end", () => console.log("ENDING VAPI SERVICE"));
+    };
+  }),
+    [interviewInfo];
 
   const GeneratedFeedback = async () => {
+    setLoading(true);
     const result = await axios.post("/api/ai-feedback", {
       conversation: conversation,
     });
@@ -142,6 +170,10 @@ Key Guidelines:
         },
       ])
       .select();
+
+    console.log(data);
+    router.replace("/interview/" + interview_id + "/completed");
+    setLoading(false);
   };
 
   return (
@@ -190,7 +222,11 @@ Key Guidelines:
       <div className="flex items-center justify-center gap-5 mt-7">
         <Mic className="h-12 w-12 p-3 bg-gray-500 rounded-full text-white cursor-pointer" />
         <AlertConfirmation stopInterview={stopInterview}>
-          <Phone className="h-12 w-12 p-3 bg-red-500 rounded-full text-white cursor-pointer" />
+          {!loading ? (
+            <Phone className="h-12 w-12 p-3 bg-red-500 rounded-full text-white cursor-pointer" />
+          ) : (
+            <Loader2Icon className="animate-spin" />
+          )}
         </AlertConfirmation>
       </div>
       <h2 className="text-sm text-gray-400 text-center mt-5">

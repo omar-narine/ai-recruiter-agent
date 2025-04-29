@@ -1,9 +1,10 @@
 import moment from "moment";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import CandidateFeedbackDialog from "./CandidateFeedbackDialog";
 
 function CandidateList({ candidateList }) {
-  console.log("Candidate", candidateList[0]);
+  console.log("Candidate", candidateList);
   return (
     <div>
       <h2 className="font-bold my-5">Candidates: {candidateList?.length}</h2>
@@ -32,10 +33,8 @@ function CandidateList({ candidateList }) {
             ) : (
               <h2 className="text-orange-400">Pending</h2>
             )}
-            <Button variant={"outline"} className="text-primary">
-              View Report
-            </Button>
           </div>
+          <CandidateFeedbackDialog candidate={candidate} />
         </div>
       ))}
     </div>

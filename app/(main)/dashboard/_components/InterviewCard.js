@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Copy, Send } from "lucide-react";
 import moment from "moment";
+import Link from "next/link";
 import React from "react";
 import { toast } from "sonner";
 
@@ -27,7 +28,9 @@ function InterviewCard({ interview, viewDetail = false }) {
       <h2 className="mt-2 flex justify-between text-gray-500">
         {interview?.duration}
         <span className="text-green-800">
-          {interview["Interview-Feedback"].length} Candidates
+          {interview["Interview-Feedback"] &&
+            interview["Interview-Feedback"].length}{" "}
+          Candidates
         </span>
       </h2>
       {!viewDetail ? (
@@ -42,10 +45,14 @@ function InterviewCard({ interview, viewDetail = false }) {
           </Button>
         </div>
       ) : (
-        <Button variant={"outline"} className="mt-5 w-full">
-          View Details
-          <ArrowRight />
-        </Button>
+        <Link
+          href={"/scheduled-interview/" + interview?.interview_id + "/details"}
+        >
+          <Button variant={"outline"} className="mt-5 w-full">
+            View Details
+            <ArrowRight />
+          </Button>
+        </Link>
       )}
     </div>
   );

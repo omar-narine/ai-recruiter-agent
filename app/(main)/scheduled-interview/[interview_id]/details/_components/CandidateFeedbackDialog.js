@@ -107,6 +107,9 @@ function CandidateFeedbackDialog({ candidate }) {
                   <p>{feedback?.feedback?.summary}</p>
                 </div>
               </div>
+              <div className={`p-5` $}>
+
+              </div>
             </div>
           </DialogDescription>
         </DialogHeader>
